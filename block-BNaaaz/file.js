@@ -1,10 +1,13 @@
 var http = require('http');
 var fs = require('fs')
 
-http.createServer(function (req, res) {
-    reader = fs.createReadStream('readme.txt')
-    reader.on('data', function (chunk) {
-        console.log(chunk.toString());
-    });
-    res.end(); 
-}).listen(8080);
+var server = http.createServer(handleRequest);
+
+function handleRequest(req, res) {
+    res.setHeader('Content-Type', 'text/plain');
+    fs.createReadStream('./readme.txt').pipe(res);
+}
+
+server.listen(3000, () => {
+    console.log('server listening on port 3k');
+})
