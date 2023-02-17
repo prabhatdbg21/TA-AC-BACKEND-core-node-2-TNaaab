@@ -1,29 +1,4 @@
 /*
-Q1. Suppose on desktop, inside projects we have 2 folder each with a file
-Structure is:-
-Desktop
-  - projects
-    - client(dir)
-      - index.js
-    - server(dir)
-      - app.js
-
-You are currently in server.js
-
-Write code to
-  - get relative path of `index.js` 
-  - get absolute path of `index.js`
-*/
-
-//    - get relative path of `index.js` 
-console.log('./client/index.js');
-
-//    - get absolute path of `index.js`
-console.log( __dirname + './client/index.js');  
-
-
-
-/*
 Project folder
   - server.js
   - form.html(html form)
@@ -45,22 +20,30 @@ Write code inside `server.js` to
 */
 
 var http = require ('http');
-var qs = require('querystring')
+var qs = require('querystring');
+var fs = require('fs')
 
-var server = http.createServer(handleRequest3);
+var server = http.createServer(handleRequest);
 
-function handleRequest3(req, res) {
-    if(req.method === 'GET' && req.url === '/form') {
-        var store = '';
-        req.on('data', (chunk) => {
-            store = store + chunk;
-        });
-        req.on('end', () => {
-            console.log(store)
-            //var parsedData = qs.parse(store);
-            //res.end(JSON.stringify(parsedData.captain));
-        })
-    }
+function handleRequest(req, res) {
+    var store = '';
+    req.on('data', (chunk) => {
+        store = store + chunk;
+    });
+    req.on('end', () => {
+        if(req.method === 'GET' && req.url === '/form') {
+            res.setHeader('Content-Type', "test/html");
+            fs.createReadStream('./form.html').pipe(res);
+        }
+        if(req.method === 'POST' && req.url === '/form') {
+            var parsedData = qs.parse(store);
+            res.setHeader('Content-Type', "test/html");
+            res.write(`<h1>${parsedData.name}</h1>`);
+            res.write(`<h2>${parsedData.email}</h2>`);
+            res.write(`<h3>${parsedData.age}</h3>`);
+            res.end()
+        }
+    })
 }
 
 server.listen(5678, () => {
