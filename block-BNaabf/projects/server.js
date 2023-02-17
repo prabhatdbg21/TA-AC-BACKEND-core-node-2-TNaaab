@@ -17,6 +17,14 @@ Write code inside `server.js` to
 - once the form is submitted, capture the data on server side using `data/end` event on request object
 - make sure to add `method` and `action` attribute to `HTML form` in form.html
 - send captured data in response as html page 
+
+You have to basically handle 2 routes
+1. to display the form data -> GET on `/form` route
+2. to capture data from form and display it -> POST on `/form` route
+
+##### Note:-
+- action attribute determines the route which will be requested on server side
+- method defines HTTP method used to submit the form(ideally POST)
 */
 
 var http = require ('http');
